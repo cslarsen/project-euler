@@ -41,26 +41,26 @@ enum player
  *
  */
 #define MAXK 11
-#define MAXSIZE 2048
+#define MAXSIZE 8*1024
 
 typedef bitset<MAXSIZE> tree;
 
-static Z left(const Z& i)
+static inline Z left(const Z& i)
 {
-  Z r = (2*i)+1;
+  const Z r = (2*i)+1;
   assert(r < MAXSIZE);
   return r;
 }
 
-static Z right(const Z& i)
+static inline Z right(const Z& i)
 {
-  Z r = (2*i) + 2;
+  const Z r = (2*i) + 2;
   assert(r < MAXSIZE);
   return r;
 }
 
 // Construct a Fibonacci tree
-static void build(tree& t, const Z& k, const Z& i=0)
+static void __build(tree& t, const Z& k, const Z& i=0)
 {
   if ( k <= 0 )
     return;
@@ -71,8 +71,15 @@ static void build(tree& t, const Z& k, const Z& i=0)
   }
 
   t[i] = t[i+1] = true;
-  build(t, k-1, left(i));
-  build(t, k-2, right(i));
+  __build(t, k-1, left(i));
+  __build(t, k-2, right(i));
+}
+
+static tree build(const Z& k)
+{
+  tree t;
+  __build(t, k);
+  return t;
 }
 
 static void rmchildren(tree &t, const Z& i)
@@ -146,16 +153,15 @@ static void remove(
 }
 
 /*
- * Count nodes in trees.
- * This is basically a popcount.
+ * Node count in tree is the same as popcount.
  */
-static Z nodes(const tree& t)
+static inline Z nodes(const tree& t)
 {
   return t.count();
 }
 
 /*
- * Count nodes in a tree with size k by calculating it.
+ * Calculate nodes in a tree with size k.
  *
  * This is the same as the Fibonacci number minus one:
  * http://oeis.org/A000071
@@ -177,7 +183,7 @@ static Z knodes(const Z& k)
   return b;
 }
 
-static player other(const player p)
+static inline player other(const player p)
 {
   return p==US? THEM : US;
 }
@@ -260,13 +266,17 @@ static player winner(const tree& t, const player current)
    * chose that one and win the game.
    */
 
-  // First some heuristics.  If the root node has only one child,
-  // the current player will automatically be able to win.
+  /*
+   * First some heuristics.
+   *
+   * If the root node has only one child, the current
+   * player will automatically be able to win.
+   */
   if ( (t[right(0)] + t[left(0)]) == 1 )
     return current;
 
   // Next, try all possibilities
-  for ( Z n=0; n<size; ++n ) {
+  for ( Z n=2; n<size; ++n ) {
     tree c(t);
     remove(c, n);
 
@@ -279,46 +289,44 @@ static player winner(const tree& t, const player current)
   return other(current);
 }
 
+/*
+ * Same as f(k)
+ */
 static Z wins(const Z& k)
 {
   Z w = 0;
   const Z size = knodes(k);
+
+  cout << "   k=" << k << " size=" << size-1 << ": ";
 
   /*
    * Start a new game, remove a given node and
    * check if it leads to a guaranteed win.
    */
   for ( Z n=0; n<size; ++n ) {
-    tree t;
-    build(t, k);
+    tree t = build(k);
     remove(t, n);
 
-    cout << "   Checking k=" << k << " n=" << n << endl;
+    cout << n << " "; cout.flush();
 
     // Other player's turn:
     if ( winner(t, THEM) == US ) {
-      tree o;
-      build(o, k);
-      cout << "   T(" << k << ") has winning node at " << n <<
-        " with path " << path(o, n) << endl;
       ++w;
+
+      cout << endl
+        << "   T(" << k << ") has winning node at " << n
+        << " with path " << path(build(k), n) << endl << "   ";
     }
   }
 
   return w;
 }
 
-static Z f(const Z& k)
-{
-  return wins(k);
-}
-
 int main()
 {
   for ( Z k=1; k<MAXK; ++k ) {
-    tree t;
-    build(t, k);
     Z w = wins(k);
+    cout << endl;
     cout << "** T(" << k << ") has " << w << " winning node(s)" << endl;
   }
 }
