@@ -1,5 +1,6 @@
 TARGETS = e399
-CXXFLAGS = -O3 -W -Wall
+CXX = /usr/local-gcc/bin/g++
+CXXFLAGS = -O3 -march=native -mtune=native --std=c++11 -W -Wall
 
 run: all
 	@bash -c "time ./$(TARGETS)"
