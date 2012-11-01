@@ -20,6 +20,8 @@
 #include <set>
 #include <utility>
 #include <inttypes.h>
+#include "string.h"
+#include "sha1.h"
 
 using namespace std;
 
@@ -238,7 +240,20 @@ static inline player other(const player p)
   return p==US? THEM : US;
 }
 
-static set<tree, LessThan> loss;
+//static map<tree, bool, LessThan> loss;
+static map<Z, bool> loss;
+
+Z tree_hash(const tree& t)
+{
+  SHA1Context c;
+  SHA1Reset(&c);
+  SHA1Input(&c, (uint8_t*)&t, sizeof(t));
+  uint8_t dig[SHA1HashSize];
+  SHA1Result(&c, dig);
+  Z r=0;
+  memcpy(&r, &dig[0], sizeof(r));
+  return r;
+}
 
 static player winner(const tree& t, const player current)
 {
@@ -341,15 +356,22 @@ static player winner(const tree& t, const player current)
     tree c(t);
     remove(c, n);
 
+    Z h = tree_hash(c);
+
     // seen it before, and it was a loss
-    if ( loss.find(c) != loss.end() )
+    if ( loss.find(h) != loss.end() ) {
+      if ( loss[h] == false )
+        return current;
       continue;
+    }
 
     // if there is a winning move, current player wins
-    if ( winner(c, other(current)) == current )
+    if ( winner(c, other(current)) == current ) {
+      loss[h] = false;
       return current;
+    }
 
-    loss.insert(c);
+    loss[h] = true;
   }
 
   // no winning moves, the current player loses
