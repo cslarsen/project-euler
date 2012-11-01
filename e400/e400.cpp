@@ -43,14 +43,14 @@ enum player
  * order (k=43 gives 1B bits, or 125Mb of memory).
  *
  */
-#define MAXK 11
+#define MAXK 7
 #define MAXSIZE 8*1024
 
 typedef bitset<MAXSIZE> tree;
 
 class LessThan {
 public:
-   bool operator() (const tree& lhs, const tree& rhs) const 
+   bool operator() (const tree& lhs, const tree& rhs) const
    {
       size_t i = MAXSIZE;
       while ( i > 0 ) {
@@ -63,8 +63,8 @@ public:
          }
       }
       return false;
-   } 
-}; 
+   }
+};
 
 static inline Z left(const Z& i)
 {
@@ -238,6 +238,8 @@ static inline player other(const player p)
   return p==US? THEM : US;
 }
 
+static set<tree, LessThan> loss;
+
 static player winner(const tree& t, const player current)
 {
   const Z size = nodes(t);
@@ -330,8 +332,6 @@ static player winner(const tree& t, const player current)
    * so start at n=2 and skip the right child of root.
    */
   const Z root_right_child = rrch(t);
-
-  static set<tree, LessThan> loss;
 
   // Try all possibilities
   for ( Z n=2; n<size; ++n ) {
