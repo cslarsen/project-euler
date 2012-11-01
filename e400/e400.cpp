@@ -16,6 +16,9 @@
 #include <cassert>
 #include <bitset>
 #include <string>
+#include <map>
+#include <set>
+#include <utility>
 #include <inttypes.h>
 
 using namespace std;
@@ -44,6 +47,24 @@ enum player
 #define MAXSIZE 8*1024
 
 typedef bitset<MAXSIZE> tree;
+
+class LessThan {
+public:
+   bool operator() (const tree& lhs, const tree& rhs) const 
+   {
+      size_t i = MAXSIZE;
+      while ( i > 0 ) {
+         if ( lhs[i-1] == rhs[i-1] ) {
+            i--;
+         } else if ( lhs[i-1] < rhs[i-1] ) {
+            return true;
+         } else {
+            return false;
+         }
+      }
+      return false;
+   } 
+}; 
 
 static inline Z left(const Z& i)
 {
@@ -150,6 +171,35 @@ static void remove(
     if ( t[left(i)] ) remove(t, target, left(i), false);
     if ( t[right(i)] ) remove(t, target, right(i), false);
   }
+}
+
+// find nodeid for root's right child
+// (there MUST be a faster way to do this)
+static Z rrch(const tree& t,
+    const Z& i=0,
+    const bool refresh=true)
+{
+  // Keep a running count of the current node number
+  static Z nodeid = 0;
+
+  // ORDER DEPENDENCY:
+  if ( refresh ) nodeid = 0;
+  if ( i>=MAXSIZE ) return 0;
+  if ( !refresh ) ++nodeid;
+
+  if ( right(0) == i ) {
+    return nodeid;
+  }
+
+  if ( t[i] ) {
+    Z a=0;
+    if ( t[left(i)] ) a = rrch(t, left(i), false);
+    if ( a != 0 ) return a;
+    if ( t[right(i)] ) a = rrch(t, right(i), false);
+    if ( a != 0 ) return a;
+  }
+
+  return 0;
 }
 
 /*
@@ -275,14 +325,31 @@ static player winner(const tree& t, const player current)
   if ( (t[right(0)] + t[left(0)]) == 1 )
     return current;
 
-  // Next, try all possibilities
+  /*
+   * The children of the root are guaranteed losses,
+   * so start at n=2 and skip the right child of root.
+   */
+  const Z root_right_child = rrch(t);
+
+  static set<tree, LessThan> loss;
+
+  // Try all possibilities
   for ( Z n=2; n<size; ++n ) {
+    if ( n == root_right_child )
+      continue;
+
     tree c(t);
     remove(c, n);
+
+    // seen it before, and it was a loss
+    if ( loss.find(c) != loss.end() )
+      continue;
 
     // if there is a winning move, current player wins
     if ( winner(c, other(current)) == current )
       return current;
+
+    loss.insert(c);
   }
 
   // no winning moves, the current player loses
