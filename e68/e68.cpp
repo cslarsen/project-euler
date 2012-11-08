@@ -13,6 +13,12 @@
  *  5 O
  *
  * For the magic 5-gon, remember that 10 must be in the outer nodes.
+ *
+ * Run with
+ *
+ * $ ./e68 | sort
+ *
+ * and select the last line.
  */
 
 #include <iostream>
@@ -25,16 +31,6 @@ using namespace std;
 #define SIZE 3
 
 typedef uint32_t I;
-typedef set<I> SET;
-
-std::ostream& operator<<(std::ostream& o, const set<I>& s)
-{
-  for ( const auto& x : s )
-    o << x << " ";
-
-  return o;
-}
-
 
 int main()
 {
