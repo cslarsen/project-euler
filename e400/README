@@ -1,0 +1,22 @@
+Some notes:
+
+- It SEEMS every 6th numbers starting from f(7) is 0:
+
+      f(7) = f(13) = f(19) = f(25) = 0
+
+  If so, then f(1 + n*6) = 0 for n>0.
+
+- It also SEEMS that all f(k) are odd numbers.
+
+- When plotted logarithmically, they almost form a
+  straight line, with some dents.
+
+- Notice that f(8), f(14), f(20) (delta=6) almost
+  seem to form a logarithmic line.  Their values are:
+
+    k     f
+   --------
+    8     7
+   14    93
+   20  1383
+   26 20151
