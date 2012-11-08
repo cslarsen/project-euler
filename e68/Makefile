@@ -1,7 +1,7 @@
 PROGRAM = e68
-CXX = g++
+CXX = /usr/local-gcc/bin/g++
 TARGETS = $(PROGRAM)
-CXXFLAGS = -W -Wall -O3 -fomit-frame-pointer
+CXXFLAGS = -W -Wall -O3 -fomit-frame-pointer --std=c++11 -march=corei7
 
 run: all
 	@echo --- `date` | tee output
