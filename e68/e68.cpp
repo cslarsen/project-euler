@@ -28,32 +28,49 @@
 
 using namespace std;
 
-#define SIZE 3
+#define SIZE 5
 
 typedef uint32_t I;
 
 int main()
 {
-  I inner[3];
-  I outer[3];
-  I digits[] = {1,2,3,4,5,6};
+  I inner[SIZE];
+  I outer[SIZE];
+  I digits[] = {1,2,3,4,5,6,7,8,9,10};
 
   do {
     inner[0] = digits[0];
     inner[1] = digits[1];
     inner[2] = digits[2];
+    inner[3] = digits[3];
+    inner[4] = digits[4];
 
-    outer[0] = digits[3];
-    outer[1] = digits[4];
-    outer[2] = digits[5];
+    outer[0] = digits[5];
+    outer[1] = digits[6];
+    outer[2] = digits[7];
+    outer[3] = digits[8];
+    outer[4] = digits[9];
+
+    // Requirement that we must have 10 in the outer ring
+    // Doesn't matter EXACTLY where it is, because of rotational
+    // symmetry.
+    bool found = false;
+    for ( I i=0; i<SIZE; ++i )
+      if ( outer[i] == 10 ) {
+        found = true;
+        break;
+      }
+    if ( !found ) continue;
 
     I sum1 = outer[0] + inner[0] + inner[1];
     I sum2 = outer[1] + inner[1] + inner[2];
-    I sum3 = outer[2] + inner[2] + inner[0];
+    I sum3 = outer[2] + inner[2] + inner[3];
+    I sum4 = outer[3] + inner[3] + inner[4];
+    I sum5 = outer[4] + inner[4] + inner[0];
 
-    if ( sum1 == sum2 && sum3 == sum2 ) {
-      I s = 0, sm=outer[0]; // start
+    if ( sum1==sum2 && sum3==sum4 && sum4==sum5 && sum4==sum1 ) {
       // Find lowest start point in outer ring
+      I s = 0, sm=outer[0]; // start
       for ( I i=1; i<SIZE; ++i )
         if ( sm > outer[i] ) {
           sm = outer[i];
