@@ -1,6 +1,6 @@
-CXX = /usr/local-gcc/bin/c++ --std=c++11
+CXX = /usr/local-gcc/bin/g++ --std=c++11
 TARGETS = sha1.o e400
-CXXFLAGS = -W -Wall -O3 -fomit-frame-pointer -march=corei7 -msse4 #-lgmpxx -lgmp
+CXXFLAGS = -W -Wall -DNDEBUG -O3 -fomit-frame-pointer -march=corei7 -msse4 -lgmpxx -lgmp
 
 run: all
 	@echo --- `date`        | tee output
