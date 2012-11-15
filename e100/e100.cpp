@@ -133,7 +133,6 @@ int main(int argc, char** argv)
       help();
   }
 
-
   find(1, interval);
   return 0;
 }
