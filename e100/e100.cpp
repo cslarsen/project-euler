@@ -108,30 +108,33 @@ static void find(const Z& start, const Z& omp_interval)
 }
 
 static Z interval = 1e6;
+static Z threads = 4*omp_get_num_threads();
 
 static void help()
 {
   cerr << "Usage: e100 [ threads ] [ interval size ]" << endl;
-  cerr << "Defaults: e100 " << omp_get_num_threads() << " " << interval << endl;
+  cerr << "Defaults: e100 " << threads << " " << interval << endl;
   exit(1);
 }
 
 int main(int argc, char** argv)
 {
   if ( argc > 1 ) {
-    if ( isdigit(argv[1][0]) )
-      omp_set_num_threads(atoi(argv[1]));
-    else
+    if ( !isdigit(argv[1][0]) )
       help();
+
+    threads = atoi(argv[1]);
   }
 
   if ( argc > 2 ) {
-    if ( isdigit(argv[2][0]) ) {
-      interval = atoi(argv[2]);
-      cout << "interval size " << interval << endl;
-    } else
+    if ( !isdigit(argv[2][0]) )
       help();
+
+    interval = atoi(argv[2]);
   }
+
+  cout << "interval " << interval << endl;
+  omp_set_num_threads(threads);
 
   find(1, interval);
   return 0;

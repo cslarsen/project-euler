@@ -7,7 +7,7 @@ LDFLAGS =
 run: all
 	@strip $(PROGRAM)
 	@date
-	@bash -c "time ./$(PROGRAM)"
+	@bash -c "time ./$(PROGRAM) 16"
 
 all: $(TARGETS)
 
