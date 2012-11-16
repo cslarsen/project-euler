@@ -1,0 +1,14 @@
+a0 = 1, b0 = 2
+an = 2bn.1 + an.1
+bn = 2an + bn.1
+
+http://en.wikipedia.org/wiki/Special_right_triangles#Almost-isosceles_Pythagorean_triples
+
+filter for eq sides
+
+Se ogsaa:
+
+http://en.wikipedia.org/wiki/Heronian_triangle
+
+Som har formel for alle, saa kan man filtrere.
+
