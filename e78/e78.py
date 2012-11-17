@@ -2,9 +2,11 @@
 # -*- coding: utf-8 -*-
 
 """
-projecteuler.net problem 78
+ProjectEuler.net Problem 78
+Solved by Christian Stigen Larsen
 
-p(5) = 7
+This is the same as the number of partitions, which we have already solved.
+
 """
 
 import math, sys
@@ -13,8 +15,13 @@ sys.setrecursionlimit(1000000)
 
 memo = {} # memoization
 def p(k, n):
-  if k > n: return 0
-  if k == n: return 1
+  if k > n:
+    memo[(k,n)]=0
+    return 0
+
+  if k == n:
+    memo[(k,n)]=1
+    return 1
 
   # memoization
   if (k,n) in memo: return memo[(k,n)]
@@ -41,30 +48,31 @@ def pr(n):
 #  print i, pn(i)
 #sys.exit(0)
 
-n = 0
-#n = 2554
-#n = 2961
-try:
-  r = 9
-  while r % 1000000 != 0:
-    r = pn(n)
-    for m in [6,5,4,3]:
-      if r % (10**m) == 0:
-        print n, r, "10^%d" % m
-        break
-    #while (pn(n) % 1000000) != 0:
-    n += 1
-  print "p(%d) = %d" % (n, pn(n))
-except Exception, e:
-  print "error at n =", n, pn(n-1)
-  #print e
-except KeyboardInterrupt, f:
-  print ""
-  print "interrupt at n =", n, pn(n)
+"""
+Vi har P(n) = sum(p(k, n-k) for k=1 til ceil(n/2))
+Eller P(n) = p(1,n-1) + p(2,n-2) + ... + p(1+n/2, n - (1+n/2))
 
-#pr(0)
-#pr(1)
-#pr(2)
-#pr(3)
-#pr(4)
-#pr(5)
+Så, hintet er, er 2300 delelig med hundre?
+Hva med 2377 + 8833 ? Ja, fordi 77+33=100, så når
+man tar 2377+8833 så får man ???00 i slutten, altså delelig med 100!
+
+Så for å se om et tall er delelig med 10^6, så ta og se om
+
+p(a,b) mod 10^6 + p(c,d) mod 10^6 + ... = 0
+
+"""
+if __name__ == "__main__":
+  try:
+    DIV=1000000
+    for n in xrange(2,DIV):
+      r = 1
+      print n,
+      sys.stdout.flush()
+      for k in xrange(1, 1+(n/2)):
+        r += p(k, n-k)
+        r %= DIV
+      if r==0:
+        print "P(%d) is divisible by %d" % (n, DIV)
+        break
+  except KeyboardInterrupt, e:
+    pass
