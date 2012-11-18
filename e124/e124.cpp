@@ -1,13 +1,13 @@
 /*
  * ProjectEuler.net Problem 124
  * Solved by Christian Stigen Larsen
+ *
+ * Straight-forward, brute-force way.
  */
 
 #include <iostream>
 #include <cassert>
 #include <inttypes.h>
-#include <map>
-#include <math.h>
 #include "primes.h"
 
 using namespace std;
@@ -17,7 +17,7 @@ using namespace std;
 typedef uint32_t Z;
 typedef pair<Z,Z> ZZ;
 
-prime_sieve<Z, 1+N_MAX> primes;
+static prime_sieve<Z, 1+N_MAX> primes;
 
 static Z rad(const Z& n)
 {
@@ -54,16 +54,12 @@ int main()
   assert(rad(9)==3); assert(rad(10)==10);
 
   cout << "Generating" << endl;
-  cout.flush();
 
-  vector<ZZ> E;
+  ZZ E[N_MAX];
   for ( Z n=1; n<=N_MAX; ++n )
-    E.push_back(ZZ(n, rad(n)));
+    E[n-1] = ZZ(n, rad(n));
 
-  cout << "Sorting" << endl;
-  cout.flush();
-
-  sort(E.begin(), E.end(), compare);
+  sort(E, E+N_MAX, compare);
 
   cout << "E[10000] = " << E[10000-1].first << endl;
 }
