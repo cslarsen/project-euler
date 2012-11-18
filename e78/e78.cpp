@@ -19,40 +19,30 @@
 
 #include <iostream>
 #include <cassert>
-#include <unordered_map>
+#include <map>
 #include <inttypes.h>
+#include <gmpxx.h>
 
 using namespace std;
 
-typedef uint32_t Z;
+typedef mpz_class Z;
+typedef uint32_t I;
 
-/*
- * The integer partition intermediate function MOD m, see:
- * http://en.wikipedia.org/wiki/Partition_(number_theory)#Intermediate_function
- */
-static unordered_map<Z, Z> memo;
-static Z pmod(const Z& k, const Z& n, const Z& m)
-{
-  if ( k > n ) return 0;
-  if ( k == n ) return 1;
-
-  const Z kn((n<<(sizeof(Z)*4)) ^ k);
-  if ( memo.find(kn) != memo.end() )
-    return memo[kn];
-
-  const Z r = (pmod(k+1, n, m) + pmod(k, n-k, m)) % m;
-  memo[kn] = r;
-  return r;
-}
 
 /*
  * Sum of divisors of n; naive implementation.
  */
-static Z sigma(const Z& n)
+static map<I,I> memos;
+static Z sigma(const I& n)
 {
-  Z r=0;
-  for ( Z i=1; i<=n; ++i )
+  if ( memos.find(n) != memos.end() )
+    return memos[n];
+
+  I r=0;
+  for ( I i=1; i<=n; ++i )
     if ( (n%i) == 0 ) r += i;
+
+  memos[n]=r;
   return r;
 }
 
@@ -63,43 +53,61 @@ static Z sigma(const Z& n)
  * the sum of divisors of k (A000203).
  *
  */
-static Z a(const Z& n)
+static map<I,Z> memoa;
+static Z a(const I& n)
 {
   if ( n==0 ) return 1;
+
+  if ( memoa.find(n) != memoa.end() )
+    return memoa[n];
+
   Z r = 0;
-  for ( Z k=0; k<n; ++k )
+  for ( I k=0; k<n; ++k )
     r += sigma(n-k)*a(k);
-  if ( r>0 ) r /= n;
+
+  if ( r>0 ) r /= Z(n);
+  memoa[n]=r;
   return r;
 }
 
-static Z find(const Z& DIV)
+static Z find(const Z& mod)
 {
   // P(11224) is div by 10^5
-  for ( Z n=0; ; ++n ) {
-    Z r = 1;
-    for ( Z k=1; k<=n/2; ++k ) {
-      r += pmod(k,n-k, DIV);
-      r %= DIV;
-    }
+  for ( I n=1; ; ++n ) {
+    Z r = 0;
 
+    for ( I k=0; k<n; ++k )
+      r += sigma(n-k) * a(k);
+
+    r /= n;
     if ( (n % 1000) == 0 ) {
       cout << n << " ";
       cout.flush();
     }
 
-    // P(n) is divisible by DIV
-    if ( r == 0 )
+    // found it
+    if ( (r % mod) == 0 )
       return n;
   }
+
+  return 0;
 }
 
 int main()
 {
   assert(sigma(123)==168);
   assert(a(5)==7);
+  assert(a(20)==627);
 
-  const Z d = 1e5;
+  /*
+   * find(10) = 9
+   * find(100) = 74
+   * find(1000) = 449
+   * find(1e4) = 599
+   * find(1e5) = 11224 ?? correct?
+   */
+
+  const Z d = 1e6;
   const Z n = find(d);
 
   cout << endl;
