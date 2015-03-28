@@ -34,13 +34,7 @@
         (* b 10)
         (* a 1)))))
 
-;(maximize
-; (+ (* a 100000)
-;    (* b 10000)
-;    (* c 1000)
-;    (* c 100)
-;    (* b 10)
-;    (* a 1)))
+;(maximize pq)
 
 (check-sat)
 (get-model)
