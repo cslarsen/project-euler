@@ -16,9 +16,9 @@
 (declare-const q Int)
 (declare-const pq Int)
 
-(assert
+(define-fun satisfy ((pq Int)) Bool
  (and
-  (<= 1 a 9)
+  (<= 9 a 9)
   (<= 0 b 9)
   (<= 0 c 9)
 
@@ -27,14 +27,11 @@
 
   (= pq
      (* p q)
-     (+ (* a 100000)
-        (* b 10000)
-        (* c 1000)
-        (* c 100)
-        (* b 10)
-        (* a 1)))))
+     (+ (* 100001 a)
+        (*  10010 b)
+        (*   1100 c)))))
 
-;(maximize pq)
+(assert (satisfy pq))
 
 (check-sat)
 (get-model)
