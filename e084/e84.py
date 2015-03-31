@@ -30,7 +30,7 @@ ch_stack = ch_orig
 
 freqs = defaultdict(lambda: 0)
 total = 0
-cutoff = 200000
+cutoff = 150000
 
 def draw_ch():
     global ch_stack
@@ -117,4 +117,6 @@ if __name__ == "__main__":
             print("%4s square %02d %f" % (pos, board.index(pos), 100.0*float(count)/total))
             string += "%02d" % board.index(pos)
             if i == 2:
-                print("--\nsix-digit modal string: %s\n--" % string)
+                print("Modal string: %s" % string)
+                print("Expected    : 101524")
+                sys.exit(0)
