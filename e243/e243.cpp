@@ -5,6 +5,7 @@
 
 #include <iostream>
 #include <inttypes.h>
+#include <stdlib.h>
 #include "gcd.h"
 
 using namespace std;

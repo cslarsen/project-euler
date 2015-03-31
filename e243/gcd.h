@@ -7,7 +7,7 @@
  * Christian Stigen Larsen
  * http://csl.sublevel3.org
  */
-uint32_t binary_gcd(uin32_t u, uint32_t v)
+uint32_t binary_gcd(uint32_t u, uint32_t v)
 {
   int shl = 0;
 
