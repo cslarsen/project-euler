@@ -1,7 +1,12 @@
+#include <stdio.h>
+#include <stdint.h>
+#include <stdlib.h>
+
 int main()
 {
-	__int64 number = 317584931803;
-	int divisor = 2;
+	int64_t number = 317584931803;
+	int64_t divisor = 2;
+
 	while (number > 1) {
 		if (0 == (number % divisor)) {
 			number /= divisor;
@@ -9,5 +14,7 @@ int main()
 		}
 		divisor++;
 	}
+
 	printf("%d\n", divisor);
+  return 0;
 }
