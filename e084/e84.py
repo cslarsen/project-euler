@@ -10,9 +10,10 @@ board = ["GO", "A1", "CC1", "A2", "T1", "R1", "B1", "CH1", "B2", "B3", "JAIL",
 "E3", "R3", "F1", "F2", "U2", "F3", "G2J", "G1", "G2", "CC3", "G3", "R4",
 "CH3", "H1", "T2", "H2"]
 
+DICE_MAX = 4
 def dice():
-    # original: return (randint(1,6), randint(1,6))
-    return (randint(1,4), randint(1,4)) # problem version
+    global DICE_MAX
+    return (randint(1,DICE_MAX), randint(1,DICE_MAX))
 
 cc_orig = ["GO", "JAIL"] + [""]*14
 shuffle(cc_orig)
@@ -30,7 +31,7 @@ ch_stack = ch_orig
 
 freqs = defaultdict(lambda: 0)
 total = 0
-cutoff = 150000
+cutoff = 250000
 
 def draw_ch():
     global ch_stack
@@ -119,4 +120,4 @@ if __name__ == "__main__":
             if i == 2:
                 print("Modal string: %s" % string)
                 print("Expected    : 101524")
-                sys.exit(0)
+                #sys.exit(0)
