@@ -1,4 +1,11 @@
 Solutions to ProjectEuler.net problems
 
 Solved by Christian Stigen Larsen
-http://csl.sublevel3.org
+http://csl.name
+
+Some of these are work-in-progress. Some are very fast, many others are very
+slow.
+
+A good tip (which I haven't followed myself) is to start small, find a
+recurrence relation and make a generating function. That's generally the
+absolutely fastest way of calculating results.
