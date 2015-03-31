@@ -30,6 +30,7 @@ ch_stack = ch_orig
 
 freqs = defaultdict(lambda: 0)
 total = 0
+cutoff = 200000
 
 def draw_ch():
     global ch_stack
@@ -38,7 +39,7 @@ def draw_ch():
     return card
 
 def main():
-    global freqs, total
+    global freqs, total, cutoff
     i = 0
     doubles = 0
     while True:
@@ -100,6 +101,8 @@ def main():
         if total % 10000 == 0:
             sys.stdout.write(".")
             sys.stdout.flush()
+        if total == cutoff:
+            raise KeyboardInterrupt()
 
 if __name__ == "__main__":
     try:
@@ -107,6 +110,7 @@ if __name__ == "__main__":
         main()
     except KeyboardInterrupt:
         print("")
+        print("Rolled %d times" % total)
         items = sorted(freqs.items(), key=lambda (a,b): b, reverse=True)
         string = ""
         for i, (pos, count) in enumerate(items):
