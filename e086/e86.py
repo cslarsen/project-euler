@@ -43,10 +43,9 @@ def perfect_square(n):
     """True if number is a perfect square."""
     # Taken from
     # http://stackoverflow.com/questions/295579/fastest-way-to-determine-if-an-integers-square-root-is-an-integer
-    if n & 0x0F in [0, 1, 4, 9]:
-        return True
-    else:
-        return isinteger(sqrt(n))
+    if not (n & 0x0F) in [0, 1, 4, 9]:
+        return False
+    return isinteger(sqrt(n))
 
 def Mf(m, verbose=False):
     """Fast version of M."""
@@ -66,9 +65,15 @@ def Mf(m, verbose=False):
                 ll = l*l
                 lh2 = l*h*2
 
-                shortest = min(sqrt(min(lh2, wh2) + hh + ww + ll), h + sqrt(ll + ww))
+                shortest = min(lh2, wh2) + hh + ww + ll
 
-                if isinteger(shortest):
+                #if hh > shortest:
+                #    write("???\n")
+                #    shortest = h + sqrt(ll + ww)
+                #else:
+                #shortest = sqrt(shortest)
+
+                if perfect_square(shortest):
                     count += 1
 
     if verbose:
