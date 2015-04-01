@@ -62,8 +62,20 @@ def M(number):
     return count
 
 def main():
+    print("Tests")
     assert(M(99) == 1975)
     assert(M(100) == 2060)
+
+    seq = []
+    try:
+        print("")
+        for n in xrange(10**6):
+            seq.append(M(n))
+            if seq[-1] > 10**6:
+                break
+    except KeyboardInterrupt:
+        print("")
+        print(",".join(map(str, seq)))
 
 if __name__ == "__main__":
     main()
