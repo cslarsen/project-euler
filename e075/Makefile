@@ -1,2 +1,2 @@
 all:
-	@python e75.py
+	time pypy e75.py
