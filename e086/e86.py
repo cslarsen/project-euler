@@ -4,37 +4,7 @@ ProjectEuler.net Problem 86
 By Christian Stigen Larsen
 http://csl.name
 
-Imagine a line from fly to the two spiders. So to routes there, and one via the
-roof. For each combination of integers l,h,w < m, we want to find the shortest
-of the three routes, and if it's an integer, count it.
-
-For m=100, there are 2060 such (distinct) cuboids.
-For m=99, the solution is 1975.
-
-Flattened:
-
- Cuboid = L*W*H
- x = spider
- f = fly
-                       L
-                  +---------x
-                  |         |
-                H |         |
-                  |         |
-            +-----+---------+-----x
-            |     |         |     |
-          W |     | bottom  |     | W
-       L    |     |         |     |
-  +---------+-----f---------+-----+
-  |         |  H  |         |  H
-W |   top   |     |         |
-  |         |     |         |
-  x---------+     +---------+
-
-Three routes:
-   - sqrt((L+H)^2 + W^2)
-   - sqrt((W+H)^2 + L^2)
-   - H + sqrt(L^2 + W^2)
+See README.md for the description and strategy used.
 """
 
 from math import sqrt
