@@ -1,81 +1,85 @@
+#!/usr/bin/env python
+
 """
 ProjectEuler.net problem 76
-How many ways can we write 100 as a sum?
-1+1+1+1+ ... +1 = 100
-2+1+1+ ... +1 = 100
+By Christian Stigen Larsen, 2012
 
-Using at least two digits:
+WHAT
 
-99 + 1
-98 + 2
+Find the number of ways a number can be written as the sum of at least two
+positive integers.
 
-etc
+BACKGROUND
 
-0->0
-1->0
-2->1
-3->2
-4->4
-5->6
-6->10
+Any number n can be written as 1+...+1 with n-1 plus signs.  This gives
+2^(n-1) non-unique combinations.  One of the solution will be simply 0+n, so
+that the number of ways to write n as the sum of at least two positive
+integers would be 2^(n-1) - 1.
+
+However, we are interested in unique combinations so that 1+2 and 2+1 are
+considered equal.
+
+This is called a partition, see
+
+https://secure.wikimedia.org/wikipedia/en/wiki/Partition_(number_theory)
+
+NUMBERS
+
+The first numbers are
+
+1 0
+2 1
+3 2
+4 4
+5 6
+6 10
+7 14
+8 21
+9 29
+10 41
+11 55
+12 76
+13 100
+...
+
+which can be written as the sequence 
+
+0, 1, 2, 4, 6, 10, 14, 21, 29, 41, 55, 76, 100, ...
+
+For instance, the number 5 can be written as the sum of positive integers in
+exactly 6 ways.
+
+The sequence above can be found in the sequence http://oeis.org/A000065
+(warning, that link contains the answer we seek!)
 """
 
-import math
-from fractions import Fraction as Fr
+memo = {} # memoization
+def p(k, n):
+  if k > n: return 0
+  if k == n: return 1
 
-def fact(n):
-  if n<2: return 1
-  if n==2: return 2
-  return reduce(lambda a,b: a*b, range(2,n+1))
+  # memoization
+  if (k,n) in memo: return memo[(k,n)]
+  memo[(k,n)] = p(k+1, n) + p(k, n-k)
+  return memo[(k,n)]
 
-def sums2(n):
-  if n<2: return 0
-  if n==2: return 1
-  if n==3: return 2
-  if n==4: return 4
-  
-  k = 2
-  return fact(n-1)/(k*fact(n-k-1))
-
-def sums(n):
-  if n==0: return
-  if n==1: yield [1]
-  if n==2:
-    yield [2]
-    yield [1,1] # 1+1
-
-  for i in range(n):
-    for c in sums(i):
-      yield sorted([n-i] + c)
-
-def unique(n):
-  return sorted(set(["+".join(map(str, S)) for S in sums(n)]))
-
-def non_unique(n):
-  return sorted(["+".join(map(str, S)) for S in sums(n)])
+def P(n):
+  r = 1
+  for k in xrange(1, 1 + (n >> 1)):
+    r += p(k, n - k)
+  return r
 
 def count(n):
-  return len(unique(n))
+  """Return number of (unique) ways to write n as the sum of at least two
+  positive integers.
+  """
+  return P(n)-1
 
-def n_take_k(n, k):
-  return fact(n)/(fact(k)*fact(n-k))
+def main(stop=20, start=1):
+  for n in xrange(start, 1+stop):
+    print n, "->", count(n)
+  n = 100
+  print n, "->", count(n)
 
-"""
-Note:
-n_take_k(n-1, 2) is the same as (n-1)*(n-2)/2
-or
-n_take_k(n, 2) is the same as n*(n-1)/2
-"""
-
-def fibo(n):
-  if n<=3: return n
-  return fibo(n-1)+fibo(n-2)
-
-#print count(100)
-#sys.exit(0)
-
-for n in range(1,15):
-  # non-unique sums: 2**(n-1)
-  combos = 2**(n-1) # same as len(non_unique(n))
-  ucombos = count(n)
-  print n, "==>", count(n), combos, n*(n-1)/2, 2**(n-2), n_take_k(n-1, n-3), fibo(n), sums2(n)
+if __name__ == "__main__":
+  main()
