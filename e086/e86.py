@@ -10,14 +10,17 @@ See README.md for the description and strategy used.
 from math import sqrt
 import sys
 
+def write(s):
+    sys.stdout.write(s)
+    sys.stdout.flush()
+
 def M(number, verbose=False):
     """Probably correct, brute-force version which is slow."""
     m = number
     count = 0
 
     if verbose:
-        sys.stdout.write("M(%d) ... " % number)
-        sys.stdout.flush()
+        write("M(%d) ... " % number)
 
     for h in xrange(1, m+1):
         for w in xrange(h, m+1):
@@ -30,8 +33,7 @@ def M(number, verbose=False):
                     count += 1
 
     if verbose:
-        sys.stdout.write("%d\n" % count)
-        sys.stdout.flush()
+        write("%d\n" % count)
     return count
 
 def isinteger(n):
@@ -51,8 +53,7 @@ def Mf(m, verbose=False):
     count = 0
 
     if verbose:
-        sys.stdout.write("Mf(%d) ... " % m)
-        sys.stdout.flush()
+        write("Mf(%d) ... " % m)
 
     for h in xrange(1, m+1):
         hh = h*h
@@ -65,43 +66,32 @@ def Mf(m, verbose=False):
                 ll = l*l
                 lh2 = l*h*2
 
-                # Comparing (ll+lh2+hh+ww) to (ww + wh2 + hh + ll) can be
-                # simplified to comparing lh2 vs wh2:
-                if lh2 >= wh2:
-                    shortest = ll + lh2 + hh + ww
-                else:
-                    shortest = ww + wh2 + hh + ll
-
-                # Further sqrt(ll + lh2 + hh + ww) vs (h + sqrt(ll + ww),
-                # just check if h^2 is bigger than ll+lh2+hh+ww first
-                if hh < shortest:
-                    shortest = min(shortest, h + sqrt(ll + ww))
+                shortest = min(sqrt(min(lh2, wh2) + hh + ww + ll), h + sqrt(ll + ww))
 
                 if isinteger(shortest):
                     count += 1
 
     if verbose:
-        sys.stdout.write("%d\n" % count)
-        sys.stdout.flush()
+        write("%d\n" % count)
     return count
 
 def main(verify=False):
-    assert(M(99) == Mf(99) == 1975)
-    assert(M(100) == Mf(100) == 2060)
+    assert M(99) == 1975, "Got %d" % M(99)
+    assert M(100) == 2060, "Got %d" % M(100)
 
-    seq = []
-    try:
-        print("")
-        for n in xrange(10**6):
-            r = Mf(n, verbose=True)
-            seq.append(r)
-            if verify:
-                assert(r == M(n))
-            if seq[-1] > 10**6:
-                break
-    except KeyboardInterrupt:
-        print("")
-        print(",".join(map(str, seq)))
+    assert Mf(99) == 1975, "Got %d" % Mf(99)
+    assert Mf(100) == 2060, "Got %d" % Mf(100)
+
+    for n in xrange(10**6):
+        r = Mf(n)
+        if r > 10**6:
+            break
+        if verify:
+            assert(r == M(n))
+        write("%d " % r)
 
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except KeyboardInterrupt:
+        pass
