@@ -1,2 +1,7 @@
+PYTHON := pypy
+
 all:
-	python e86.py
+	$(PYTHON) -OO e86.py
+
+clean:
+	rm -f *.pyc
