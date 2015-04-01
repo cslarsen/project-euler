@@ -1,2 +1,2 @@
 all:
-	bash -c "time python ./e77.py"
+	bash -c "time pypy e77.py"
