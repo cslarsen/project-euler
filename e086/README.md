@@ -8,6 +8,8 @@ of the three routes, and if it's an integer, count it.
 For m=100, there are 2060 such (distinct) cuboids.
 For m=99, the solution is 1975.
 
+See https://projecteuler.net/problem=86
+
 Strategy
 --------
 
