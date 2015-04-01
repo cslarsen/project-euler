@@ -66,16 +66,8 @@ def Mf(m, verbose=False):
                 lh2 = l*h*2
 
                 shortest = min(lh2, wh2) + hh + ww + ll
-
-                #if hh > shortest:
-                #    write("???\n")
-                #    shortest = h + sqrt(ll + ww)
-                #else:
-                #shortest = sqrt(shortest)
-
                 if perfect_square(shortest):
                     count += 1
-
     if verbose:
         write("%d\n" % count)
     return count
