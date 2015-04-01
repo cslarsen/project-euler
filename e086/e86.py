@@ -54,30 +54,30 @@ def Mf(m, verbose=False):
         sys.stdout.write("Mf(%d) ... " % m)
         sys.stdout.flush()
 
-    print("")
     for h in xrange(1, m+1):
         hh = h*h
 
         for w in xrange(h, m+1):
-            ww = w**2
+            ww = w*w
             wh2 = w*h*2
 
             for l in xrange(w, m+1):
-                ll = l**2
+                ll = l*l
                 lh2 = l*h*2
 
-                # ll+lh2+hh+ww vs ww + wh2 + hh + ll ==> lh2 vs wh2
-                # Ergo, for the first two equations, we can find the smaller by
-                # comparing lh2 vs wh2
-                routes = []
+                # Comparing (ll+lh2+hh+ww) to (ww + wh2 + hh + ll) can be
+                # simplified to comparing lh2 vs wh2:
                 if lh2 >= wh2:
-                    routes.append(sqrt(ll + lh2 + hh + ww))
+                    shortest = ll + lh2 + hh + ww
                 else:
-                    routes.append(sqrt(ww + wh2 + hh + ll))
+                    shortest = ww + wh2 + hh + ll
 
-                routes.append(h + sqrt(ll + ww))
+                # Further sqrt(ll + lh2 + hh + ww) vs (h + sqrt(ll + ww),
+                # just check if h^2 is bigger than ll+lh2+hh+ww first
+                if hh < shortest:
+                    shortest = min(shortest, h + sqrt(ll + ww))
 
-                if isinteger(min(routes)):
+                if isinteger(shortest):
                     count += 1
 
     if verbose:
@@ -85,23 +85,18 @@ def Mf(m, verbose=False):
         sys.stdout.flush()
     return count
 
-def main():
-    #assert(M(99) == Mf(99) == 1975)
-    #assert(M(100) == Mf(100) == 2060)
-
-    #for i in range(100):
-    #    assert(M(i) == Mf(i))
-    #print("--")
-    Mf(500)
-    return
+def main(verify=False):
+    assert(M(99) == Mf(99) == 1975)
+    assert(M(100) == Mf(100) == 2060)
 
     seq = []
     try:
         print("")
         for n in xrange(10**6):
-            r = Mf(n)
+            r = Mf(n, verbose=True)
             seq.append(r)
-            assert(r == M(n))
+            if verify:
+                assert(r == M(n))
             if seq[-1] > 10**6:
                 break
     except KeyboardInterrupt:
