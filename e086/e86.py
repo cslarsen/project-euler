@@ -57,8 +57,12 @@ def perfect_square(n):
 
 def integer_least_route(w, h, l):
     """Tests if a cuboid's shortest corner-to-corner path is an integer."""
-    shortest_path = min(l*h*2, w*h*2) + h*h + w*w + l*l
+    #shortest_path = w*h*2 + h*h + w*w + l*l
+    shortest_path = (w+h)**2 + l**2
     return perfect_square(shortest_path)
+
+def check(w,h,l):
+    return integer_least_route(w,h,l)
 
 def Mf(m, verbose=False):
     """Faster version of M."""
@@ -76,6 +80,16 @@ def Mf(m, verbose=False):
         write("%d\n" % count)
     return count
 
+def nextm(l):
+    """M(l) = M(l-1) + nextm(l)."""
+    c = 0
+    ll = l*l
+    for h in range(1,l+1):
+        for w in range(h, l+1):
+            if perfect_square((w+h)**2 + ll):
+                c += 1
+    return c
+
 def sanity_check(full=False):
     assert M(99) == 1975, "Got %d" % M(99)
     assert M(100) == 2060, "Got %d" % M(100)
@@ -85,17 +99,17 @@ def sanity_check(full=False):
 def main(verify=False):
     sanity_check()
 
-    prev = 0
+    count = 0
     for n in xrange(10**6):
-        r = Mf(n)
-        if r > 10**6:
+        count += nextm(n)
+        if count > 1000000:
+            print("Answer: M(%d) > 10e6" % n)
             break
 
         if verify:
-            assert(r == M(n))
+            assert(count == M(n))
 
-        write("%d/+%d " % (r, r-prev))
-        prev = r
+        write("M(%d) = %d\n" % (n, count))
 
 if __name__ == "__main__":
     try:
