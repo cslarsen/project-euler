@@ -1,2 +1,4 @@
+PYTHON := pypy
+
 all:
-	@bash -c "time python e*.py"
+	time $(PYTHON) e90.py
