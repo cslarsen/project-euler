@@ -15,7 +15,7 @@ def write(s):
     sys.stdout.flush()
 
 def M(number, verbose=False):
-    """Probably correct, brute-force version which is slow."""
+    """Correct, but slow brute-force version."""
     m = number
     count = 0
 
@@ -57,12 +57,7 @@ def perfect_square(n):
 
 def integer_least_route(w, h, l):
     """Tests if a cuboid's shortest corner-to-corner path is an integer."""
-    #shortest_path = w*h*2 + h*h + w*w + l*l
-    shortest_path = (w+h)**2 + l**2
-    return perfect_square(shortest_path)
-
-def check(w,h,l):
-    return integer_least_route(w,h,l)
+    return perfect_square((w+h)**2 + l**2)
 
 def Mf(m, verbose=False):
     """Faster version of M."""
@@ -81,7 +76,7 @@ def Mf(m, verbose=False):
     return count
 
 def nextm(l):
-    """M(l) = M(l-1) + nextm(l)."""
+    """Incremental version of M such that M(l) = M(l-1) + nextm(l)."""
     c = 0
     ll = l*l
     for h in range(1,l+1):
