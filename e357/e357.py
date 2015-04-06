@@ -33,7 +33,7 @@ def main():
         assert(primediv(n))
 
     s = 0
-    for n in xrange(1,200):
+    for n in xrange(1,2000):
         if primediv(n):
             s += n
             print(n,s)

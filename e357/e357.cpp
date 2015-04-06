@@ -29,10 +29,14 @@ int main()
   printf("Sieve contains %zu primes\n", sieve.prime_numbers());
 
   Z sum = 1;
-  for ( Z n=2; n<LIMIT; n += 2 ) {
+  //for ( Z n=2; n<LIMIT; n += 2 ) {
+  //for ( Z n=99996982; n>1; n -= 2 ) {
+  const Z size = sieve.pp->size();
+  for ( Z i=size-1; i>0; --i ) {
+    const Z n = (*sieve.pp)[i] - 1;
     // when d=n or d=1, n + n/n = n+1 must be prime
-    if ( !sieve.isprime(n+1) )
-      continue;
+    //if ( !sieve.isprime(n+1) )
+    //  continue;
 
     // as n is even, d=n/2 is a factor and n/2 + 2n/n => n/2 + 2 must be prime
     if ( !sieve.isprime((n/2)+2) )
