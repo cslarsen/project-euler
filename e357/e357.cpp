@@ -3,20 +3,26 @@
 
 #include <stdio.h>
 #include <stdint.h>
+#include <math.h>
 #include "prime_sieve.h"
 
 typedef uint64_t Z;
 
-//#define LIMIT 100
 #define LIMIT 100000000
 static const prime_sieve<LIMIT> sieve;
 
 // For every divisor d of n, d + n/d must be prime
 static inline bool primediv(const Z& n)
 {
-  for ( Z d=3; d<n; ++d ) {
+  // D'oh! As always, only need to check divisors up to sqrt(n)!
+  // It's been a while since I last did some project euler problems, this
+  // simple trick works a lot of times.
+  const Z max = sqrt(n);
+
+  for ( Z d=3; d<max; ++d ) {
     if ( (n % d) != 0 )
       continue;
+
     if ( !sieve.isprime(d + n/d) )
       return false;
   }
@@ -29,14 +35,9 @@ int main()
   printf("Sieve contains %zu primes\n", sieve.prime_numbers());
 
   Z sum = 1;
-  //for ( Z n=2; n<LIMIT; n += 2 ) {
-  //for ( Z n=99996982; n>1; n -= 2 ) {
-  const Z size = sieve.pp->size();
-  for ( Z i=size-1; i>0; --i ) {
-    const Z n = (*sieve.pp)[i] - 1;
-    // when d=n or d=1, n + n/n = n+1 must be prime
-    //if ( !sieve.isprime(n+1) )
-    //  continue;
+  for ( Z n=2; n<LIMIT; n += 2 ) {
+    if ( !sieve.isprime(n+1) )
+      continue;
 
     // as n is even, d=n/2 is a factor and n/2 + 2n/n => n/2 + 2 must be prime
     if ( !sieve.isprime((n/2)+2) )
@@ -47,4 +48,7 @@ int main()
       printf("%zu %zu\n", n, sum);
     }
   }
+
+  printf("Sum: %zu\n", sum);
+  printf("     .........3137 expected last digits\n");
 }

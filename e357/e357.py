@@ -1,3 +1,5 @@
+import math
+
 primes = set()
 
 def divisors(n):
@@ -9,7 +11,7 @@ def isprime(n):
     if n in primes:
         return True
 
-    for d in xrange(2,n):
+    for d in xrange(2, math.sqrt(n)):
         if (n % d) == 0:
             return False
 
@@ -32,8 +34,8 @@ def main():
     for n in [1,2,6,10,22,30,42,58,70,78,82]:
         assert(primediv(n))
 
-    s = 0
-    for n in xrange(1,2000):
+    s = 1
+    for n in xrange(2,2000000,2):
         if primediv(n):
             s += n
             print(n,s)

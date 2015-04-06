@@ -11,20 +11,17 @@
 
 #include <stdint.h>
 #include <bitset>
-#include <vector>
 
 template<const uint64_t PRIMES>
 class prime_sieve
 {
 public:
   std::bitset<PRIMES> *p;
-  std::vector<uint64_t> *pp;
   uint64_t primes;
 
   prime_sieve()
   {
     p = new std::bitset<PRIMES>();
-    pp = new std::vector<uint64_t>();
     rebuild();
   }
 
@@ -38,7 +35,6 @@ public:
     for ( uint64_t n=2; n < PRIMES; ++n )
       if ( (*p)[n] ) {
         ++primes;
-        pp->push_back(n);
         for ( register uint64_t m=n<<1; m < PRIMES; m += n )
           (*p)[m] = 0;
       }
