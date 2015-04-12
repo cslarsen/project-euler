@@ -67,6 +67,9 @@ static Z srt_sum(const Z& limit)
   Z s = 0;
 
   for ( Z n=1; n < limit; ++n ) {
+    if ( !sieve->isprime(n) )
+      continue;
+
     if ( strong_rt_harshad(n) )
       s += n;
 
