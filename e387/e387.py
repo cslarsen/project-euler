@@ -56,7 +56,9 @@ def srtf_sum(limit):
     return srt_sum(limit) # not implemented yet
 
 def main():
-    print(srtf_sum(1000))
+    limit = 10000000
+    print("limit=%d" % limit)
+    print(srtf_sum(limit))
 
 def test():
     assert(not isprime(1))
