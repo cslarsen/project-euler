@@ -44,21 +44,22 @@ def strong_rt_harshad(n):
     n //= 10
     return strong_harshad(n) and rt_harshad(n)
 
-def srt_sum(limit):
+def srt_sum(limit, verbose=False):
     s = 0
     for n in xrange(limit):
         if strong_rt_harshad(n):
+            if verbose: print(n,s)
             s += n
     return s
 
-def srtf_sum(limit):
+def srtf_sum(limit, verbose=False):
     """Fast version of srt_sum."""
-    return srt_sum(limit) # not implemented yet
+    return srt_sum(limit, verbose) # not implemented yet
 
 def main():
     limit = 10000000
     print("limit=%d" % limit)
-    print(srtf_sum(limit))
+    print(srtf_sum(limit, True))
 
 def test():
     assert(not isprime(1))
